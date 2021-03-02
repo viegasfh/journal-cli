@@ -3,6 +3,9 @@ using System.IO;
 using System.IO.Abstractions;
 using System.Linq;
 using System.Management.Automation;
+using System.Reflection;
+using System.Runtime.InteropServices;
+using System.Runtime.Loader;
 using JournalCli.Core;
 using JournalCli.Infrastructure;
 using Serilog;
@@ -26,6 +29,31 @@ namespace JournalCli.Cmdlets
             _encryptedStore = EncryptedStoreFactory.Create<UserSettings>();
             _settings = UserSettings.Load(_encryptedStore);
         }
+
+        //static JournalCmdletBase()
+        //{
+        //    var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        //    string path;
+        //    switch (RuntimeInformation.RuntimeIdentifier.ToLower())
+        //    {
+        //        case "win-x64":
+        //            path = Path.Combine(basePath, "win-x64");
+        //            break;
+        //        case "linux-x64":
+
+        //    }
+
+        //    NativeLibrary.Load(path);
+        //}
+
+        //internal static IntPtr NativeDllHandler(Assembly assembly, string libraryName)
+        //{
+        //    s_nativeDllSubFolder ??= GetNativeDllSubFolderName(out s_nativeDllExtension);
+        //    string folder = Path.GetDirectoryName(assembly.Location);
+        //    string fullName = Path.Combine(folder, s_nativeDllSubFolder, libraryName) + s_nativeDllExtension;
+
+        //    return NativeLibrary.TryLoad(fullName, out IntPtr pointer) ? pointer : IntPtr.Zero;
+        //}
 
         [Parameter]
         public string Location { get; set; }

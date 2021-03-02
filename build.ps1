@@ -28,26 +28,26 @@ New-Item -Path "$PSScriptRoot\publish\$appName" -ItemType Directory | Out-Null
 $publishOutputDir = "$PSScriptRoot\publish\$appName"
 $proj = Get-ChildItem -Filter "$appName.csproj" -Recurse -Path $PSScriptRoot | Select-Object -First 1 -ExpandProperty FullName
 
-dotnet publish $proj -c Release --self-contained true --output "$publishOutputDir"
+dotnet publish $proj -c Release -r ubuntu.20.04-x64 --self-contained true --output "$publishOutputDir"
 if ($LASTEXITCODE -ne 0) {
   throw "Failed to publish application."
 }
 
-$targets = 'win-x64','linux-x64','osx-x64','ubuntu.18.04-x64'
-foreach ($target in $targets) {
-  dotnet publish $proj -c Release --self-contained true -r $target --output "$publishOutputDir\$target"
-  if ($LASTEXITCODE -ne 0) {
-    throw "Failed to publish application."
-  }
-}
+# $targets = 'win-x64','linux-x64','osx-x64','ubuntu.18.04-x64'
+# foreach ($target in $targets) {
+#   dotnet publish $proj -c Release --self-contained true -r $target --output "$publishOutputDir\$target"
+#   if ($LASTEXITCODE -ne 0) {
+#     throw "Failed to publish application."
+#   }
+# }
 
-foreach ($target in $targets) {
-  Get-ChildItem -Path "$publishOutputDir\$target" | ForEach-Object {
-    if ($_.Name -notlike "*git*") {
-      Remove-Item $_
-    }
-  }
-}
+# foreach ($target in $targets) {
+#   Get-ChildItem -Path "$publishOutputDir\$target" | ForEach-Object {
+#     if ($_.Name -notlike "*git*") {
+#       Remove-Item $_
+#     }
+#   }
+# }
 
 Get-ChildItem -Path $publishOutputDir -Filter "*.pdb" -Recurse | Remove-Item
 
